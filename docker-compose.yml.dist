@@ -71,8 +71,10 @@ services:
     build:
       context: build
       dockerfile: Dockerfile-node
-    stdin_open: true
-    tty: true
+      args:
+        NODE_VERSION: stable
+    stdin_open: true # 相当与 -i
+    tty: true # 相当于 -t
     volumes:
       - "./vendor/node/data:/var/www/html" # 前端项目目录
     networks:

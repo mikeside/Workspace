@@ -8,6 +8,7 @@ git clone https://github.com/mikeside/Workspace.git
 ```
 
 ## 使用教程
+- 拷贝 docker-compose.yml.dist 为 docker-compose.yml
 - 根据需要，编辑docker-compose.yml配置文件
 - 运行命令，启动docker-compose
 ```angular2html
