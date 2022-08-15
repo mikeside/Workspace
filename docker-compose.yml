@@ -68,7 +68,9 @@ services:
       - service
   node:
     container_name: node
-    image: node
+    build:
+      context: build
+      dockerfile: Dockerfile-node
     stdin_open: true
     tty: true
     volumes:
