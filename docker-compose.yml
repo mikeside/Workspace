@@ -66,5 +66,14 @@ services:
       - "./vendor/nginx/config:/etc/nginx/conf.d" # nginx vhosts配置文件
     networks:
       - service
+  node:
+    container_name: node
+    image: node
+    stdin_open: true
+    tty: true
+    volumes:
+      - "./vendor/node/data:/var/www/html" # 前端项目目录
+    networks:
+      - service
 networks:
   service:
