@@ -88,6 +88,7 @@ services:
 
 #  golang:
 #      container_name: golang
+#      image: golang
 #      tty: true
 #      volumes:
 #        - "./vendor/golang/data:/var/www/html" # golang项目目录
