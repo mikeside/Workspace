@@ -13,6 +13,7 @@ services:
       - "./vendor/mysql/config:/etc/mysql/conf.d" # mysql定制配置文件，推荐命名：mysql.cnf 参考：https://note.youdao.com/ynoteshare/index.html?id=9a8bdbcde131322e026fc132b9a79e8b&type=note&_time=1660025049909
     networks:
       - service
+
   redis:
     container_name: redis
     image: redis
@@ -23,6 +24,17 @@ services:
       - "./vendor/redis/config:/etc/redis" # 需要自己找一份对应版本的配置文件，推荐命名：redis.conf 下载地址：https://redis.io/topics/config
     networks:
       - service
+
+  nginx:
+    container_name: nginx
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - "./vendor/nginx/config:/etc/nginx/conf.d" # nginx vhosts配置文件
+    networks:
+      - service
+
 #  mongo:
 #    container_name: mongo
 #    image: mongo
@@ -33,51 +45,53 @@ services:
 #      - "./vendor/mongo/config:/etc/mongo" # 需要自己找一份对应版本的配置文件，推荐命名：mongod.conf（可进入容器内部 复制/etc/mongod.conf.orig文件内容）
 #    networks:
 #      - service
-  rabbitmq:
-    container_name: rabbitmq
-    image: rabbitmq:management # management表示带有控制台
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    hostname: rabbitmq # 这里特别注意：rabbitmq基于“节点名称”来存储数据，默认为主机名。只有设置了固定的hostname，这样我们就不会得到一个随机的主机名，并且可以跟踪我们的数据
-    volumes:
-      - "./vendor/rabbitmq/data:/var/lib/rabbitmq"
-      #- "./vendor/rabbitmq/config/rabbitmq.config:/etc/rabbitmq/rabbitmq.config" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：rabbitmq.config （推荐使用环境变量方式配置 environment）
-    networks:
-      - service
-  php:
-    container_name: php
-    image: mikeside/php-fpm:7.4-1.1 # 切版本注释掉一个即可
-    #image: mikeside/php-fpm:8.0-1.1
-    ports:
-      - "9000:9000"
-    volumes:
-      - "./vendor/php/data:/var/www/html"
-      #- "./vendor/php/config/php-fpm.conf:/usr/local/etc/php-fpm.conf" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：php-fpm.conf
-      #- "./vendor/php/config/php.ini:/usr/local/etc/php/php.ini" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：php.ini
-    networks:
-      - service
-  nginx:
-    container_name: nginx
-    image: nginx
-    ports:
-      - "80:80"
-    volumes:
-      - "./vendor/nginx/config:/etc/nginx/conf.d" # nginx vhosts配置文件
-    networks:
-      - service
-  node:
-    container_name: node
-    build:
-      context: build
-      dockerfile: Dockerfile-node
-      args:
-        NODE_VERSION: stable
-    stdin_open: true # 相当与 -i
-    tty: true # 相当于 -t
-    volumes:
-      - "./vendor/node/data:/var/www/html" # 前端项目目录
-    networks:
-      - service
+
+#  rabbitmq:
+#    container_name: rabbitmq
+#    image: rabbitmq:management # management表示带有控制台
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    hostname: rabbitmq # 这里特别注意：rabbitmq基于“节点名称”来存储数据，默认为主机名。只有设置了固定的hostname，这样我们就不会得到一个随机的主机名，并且可以跟踪我们的数据
+#    volumes:
+#      - "./vendor/rabbitmq/data:/var/lib/rabbitmq"
+#      #- "./vendor/rabbitmq/config/rabbitmq.config:/etc/rabbitmq/rabbitmq.config" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：rabbitmq.config （推荐使用环境变量方式配置 environment）
+#    networks:
+#      - service
+
+#  php:
+#    container_name: php
+#    image: mikeside/php-fpm:7.4-1.1 # 切版本注释掉一个即可
+#    #image: mikeside/php-fpm:8.0-1.1
+#    ports:
+#      - "9000:9000"
+#    volumes:
+#      - "./vendor/php/data:/var/www/html"
+#      #- "./vendor/php/config/php-fpm.conf:/usr/local/etc/php-fpm.conf" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：php-fpm.conf
+#      #- "./vendor/php/config/php.ini:/usr/local/etc/php/php.ini" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：php.ini
+#    networks:
+#      - service
+
+#  node:
+#    container_name: node
+#    build:
+#      context: build
+#      dockerfile: Dockerfile-node
+#      args:
+#        NODE_VERSION: stable
+#    stdin_open: true # 相当与 -i
+#    tty: true # 相当于 -t
+#    volumes:
+#      - "./vendor/node/data:/var/www/html" # 前端项目目录
+#    networks:
+#      - service
+
+#  golang:
+#      container_name: golang
+#      tty: true
+#      volumes:
+#        - "./vendor/golang/data:/var/www/html" # golang项目目录
+#      networks:
+#        - service
 networks:
   service:
