@@ -89,7 +89,8 @@ services:
 #  golang:
 #      container_name: golang
 #      image: golang
-#      tty: true
+#      stdin_open: true # 相当与 -i
+#      tty: true # 相当于 -t
 #      volumes:
 #        - "./vendor/golang/data:/var/www/html" # golang项目目录
 #      networks:
