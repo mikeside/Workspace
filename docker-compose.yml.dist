@@ -35,6 +35,9 @@ services:
       - "./vendor/nginx/data:/var/www/html"
       - "./vendor/nginx/config/conf.enabled:/etc/nginx/conf.d" # nginx vhosts配置文件
       #- "./vendor/nginx/config/nginx.conf:/etc/nginx/nginx.conf" # nginx配置文件(复制容器内配置文件到该目录下，命名：nginx.conf)
+
+      # 多容器映射同一个目录(解决nginx跨容器访问不了静态资源问题)
+      #- "./vendor/php/data:/var/www/php" # 将php项目挂载到nginx
     networks:
       - service
 
