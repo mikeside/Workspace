@@ -67,9 +67,7 @@ services:
 
 #  php:
 #    container_name: php
-#    image: mikeside/php-fpm:7.4-1.1 # 切版本注释掉一个即可
-#    #image: mikeside/php-fpm:8.0-1.1
-#    #platform: linux/arm64 # 需要指定平台构建开启此项
+#    image: mikeside/php-fpm:8.0-1.0
 #    ports:
 #      - "9000:9000"
 #    volumes:
@@ -81,11 +79,7 @@ services:
 
 #  node:
 #    container_name: node
-#    build:
-#      context: build
-#      dockerfile: Dockerfile-node
-#      args:
-#        NODE_VERSION: stable
+#    image: node
 #    stdin_open: true # 相当与 -i
 #    tty: true # 相当于 -t
 #    volumes:
