@@ -96,8 +96,7 @@ services:
 #    build:
 #      context: https://github.com/mikeside/build-service.git
 #      dockerfile: Dockerfile-php80
-##      args:
-##        platform: linux/arm64
+##    platform: linux/arm64
 #    ports:
 #      - "9000:9000"
 #    volumes:
