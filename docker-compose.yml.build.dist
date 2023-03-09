@@ -1,0 +1,140 @@
+version: "3.8" # compose文件解析器版本 最新的为3.x
+services:
+  mysql:
+    container_name: mysql
+    image: workspace/mariadb:latest
+    build:
+      context: https://github.com/mikeside/build-service.git
+      dockerfile: Dockerfile-mariadb
+      args:
+        MARIADB_VERSION: latest
+    ports:
+      - "3306:3306"
+    environment: # 设置环境变量
+      - "MYSQL_ROOT_PASSWORD=root"
+      - "MYSQL_ROOT_HOST=%"
+    volumes:
+      - "./vendor/mysql/data:/var/lib/mysql"
+      - "./vendor/mysql/config:/etc/mysql/conf.d" # mysql定制配置文件，推荐命名：mysql.cnf 参考：https://note.youdao.com/ynoteshare/index.html?id=9a8bdbcde131322e026fc132b9a79e8b&type=note&_time=1660025049909
+    networks:
+      - service
+
+  redis:
+    container_name: redis
+    image: workspace/redis:latest
+    build:
+      context: https://github.com/mikeside/build-service.git
+      dockerfile: Dockerfile-redis
+      args:
+        REDIS_VERSION: latest
+    ports:
+      - "6379:6379"
+    volumes:
+      - "./vendor/redis/data:/data"
+      - "./vendor/redis/config:/etc/redis" # 需要自己找一份对应版本的配置文件，推荐命名：redis.conf 下载地址：https://redis.io/topics/config
+    networks:
+      - service
+
+  nginx:
+    container_name: nginx
+    image: workspace/nginx:latest
+    build:
+      context: https://github.com/mikeside/build-service.git
+      dockerfile: Dockerfile-nginx
+      args:
+        NGINX_VERSION: latest
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "./vendor/nginx/data:/var/www/nginx"
+      - "./vendor/nginx/config/conf.enabled:/etc/nginx/conf.d" # nginx vhosts配置文件
+      #- "./vendor/nginx/config/nginx.conf:/etc/nginx/nginx.conf" # nginx配置文件(复制容器内配置文件到该目录下，命名：nginx.conf)
+
+      # 多容器映射同一个目录(解决nginx跨容器访问不了静态资源问题)
+      #- "./vendor/php/data:/var/www/php" # 将php项目挂载到nginx
+    networks:
+      - service
+
+#  mongo:
+#    container_name: mongo
+#    image: workspace/mongo:latest
+#    build:
+#      context: https://github.com/mikeside/build-service.git
+#      dockerfile: Dockerfile-mongo
+#      args:
+#        MONGO_VERSION: latest
+#    ports:
+#      - "27017:27017"
+#    volumes:
+#      - "./vendor/mongo/data:/data/db"
+#      - "./vendor/mongo/config:/etc/mongo" # 需要自己找一份对应版本的配置文件，推荐命名：mongod.conf（可进入容器内部 复制/etc/mongod.conf.orig文件内容）
+#    networks:
+#      - service
+
+#  rabbitmq:
+#    container_name: rabbitmq
+#    image: workspace/rabbitmq:management # management表示带有控制台
+#    build:
+#      context: https://github.com/mikeside/build-service.git
+#      dockerfile: Dockerfile-rabbitmq
+#      args:
+#        RABBITMQ_VERSION: management
+#    ports:
+#      - "5672:5672"
+#      - "15672:15672"
+#    hostname: rabbitmq # 这里特别注意：rabbitmq基于“节点名称”来存储数据，默认为主机名。只有设置了固定的hostname，这样我们就不会得到一个随机的主机名，并且可以跟踪我们的数据
+#    volumes:
+#      - "./vendor/rabbitmq/data:/var/lib/rabbitmq"
+#      #- "./vendor/rabbitmq/config/rabbitmq.config:/etc/rabbitmq/rabbitmq.config" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：rabbitmq.config （推荐使用环境变量方式配置 environment）
+#    networks:
+#      - service
+
+#  php:
+#    container_name: php
+#    image: workspace/php-fpm:8.0
+#    build:
+#      context: https://github.com/mikeside/build-service.git
+#      dockerfile: Dockerfile-php80
+##      args:
+##        platform: linux/arm64
+#    ports:
+#      - "9000:9000"
+#    volumes:
+#      - "./vendor/php/data:/var/www/php"
+#      #- "./vendor/php/config/php-fpm.conf:/usr/local/etc/php-fpm.conf" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：php-fpm.conf
+#      #- "./vendor/php/config/php.ini:/usr/local/etc/php/php.ini" # 需要自己找一份对应版本的配置文件后开启挂载，推荐命名：php.ini
+#    networks:
+#      - service
+
+#  node:
+#    container_name: node
+#    image: workspace/node:stable
+#    build:
+#      context: https://github.com/mikeside/build-service.git
+#      dockerfile: Dockerfile-node
+#      args:
+#        NODE_VERSION: stable
+#    stdin_open: true # 相当与 -i
+#    tty: true # 相当于 -t
+#    volumes:
+#      - "./vendor/node/data:/var/www/node" # 前端项目目录
+#    networks:
+#      - service
+
+#  golang:
+#      container_name: golang
+#      image: workspace/golang:latest
+#      build:
+#        context: https://github.com/mikeside/build-service.git
+#        dockerfile: Dockerfile-golang
+#        args:
+#          GOLANG_VERSION: latest
+#      stdin_open: true # 相当与 -i
+#      tty: true # 相当于 -t
+#      volumes:
+#        - "./vendor/golang/data:/var/www/golang" # golang项目目录
+#      networks:
+#        - service
+networks:
+  service:
