@@ -93,10 +93,10 @@ services:
 #  php:
 #    container_name: php
 #    image: workspace/php-fpm:8.0
+#    #platform: linux/arm64
 #    build:
 #      context: https://github.com/mikeside/build-service.git
 #      dockerfile: Dockerfile-php80
-##    platform: linux/arm64
 #    ports:
 #      - "9000:9000"
 #    volumes:
